@@ -1476,7 +1476,7 @@
 
     <header id="header">
         <nav>
-            <div class="logo">RM</div>
+            <div class="logo" id="logoToggle" style="cursor: pointer;">RM</div>
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">About</a></li>
@@ -1786,11 +1786,22 @@
 
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
+        const logoToggle = document.getElementById('logoToggle');
         const navLinks = document.getElementById('navLinks');
         
+        // Toggle menu with hamburger button
         if (menuToggle) {
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
+            });
+        }
+        
+        // Toggle menu with logo (RM) - especially useful on mobile
+        if (logoToggle) {
+            logoToggle.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.toggle('active');
+                }
             });
         }
         
