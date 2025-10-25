@@ -33,32 +33,6 @@
             overflow-x: hidden;
         }
 
-        /* Admin Access Button */
-        .admin-access {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 10000;
-        }
-
-        .admin-btn {
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .admin-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 51, 102, 0.6);
-        }
-
         /* Hero Image Slideshow - BOTTOM LAYER */
         .hero-slideshow {
             position: fixed;
@@ -177,6 +151,49 @@
             animation: reticleRotate 15s linear infinite reverse;
         }
 
+        /* HUD Crosshair with Scale Marks */
+        .hud-crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 120px;
+            background: linear-gradient(180deg, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .hud-crosshair::before,
+        .hud-crosshair::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: var(--primary);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hud-crosshair::before { top: 20%; }
+        .hud-crosshair::after { bottom: 20%; }
+
+        .hud-crosshair.horizontal {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+        }
+
+        .hud-crosshair.horizontal::before,
+        .hud-crosshair.horizontal::after {
+            width: 2px;
+            height: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .hud-crosshair.horizontal::before { left: 20%; }
+        .hud-crosshair.horizontal::after { right: 20%; }
+
         /* Enhanced Corner Targeting Brackets */
         .hud-corner {
             position: absolute;
@@ -293,60 +310,315 @@
             }
         }
 
-        /* HUD Text Indicators */
-        .hud-indicator {
-            position: absolute;
-            color: var(--primary);
-            font-size: 1rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px var(--glow);
-            letter-spacing: 2px;
-        }
-
-        .hud-indicator.tl { top: 5%; left: 5%; }
-        .hud-indicator.tr { top: 5%; right: 5%; }
-        .hud-indicator.bl { bottom: 5%; left: 5%; }
-        .hud-indicator.br { bottom: 5%; right: 5%; }
-
-        /* Target Lock Animation */
-        .weapon-lock {
+        /* Radar Range Rings */
+        .hud-ring {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, calc(-50% - 250px));
-            color: var(--accent);
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 51, 102, 0.8);
-            letter-spacing: 3px;
-            animation: lockPulse 1.5s ease-in-out infinite;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        @keyframes lockPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+        .hud-ring.r1 {
+            width: 550px;
+            height: 550px;
+            animation: radarPing 5s ease-out infinite;
         }
 
-        /* Scanning Line */
+        .hud-ring.r2 {
+            width: 850px;
+            height: 850px;
+            animation: radarPing 5s ease-out infinite 1.5s;
+        }
+
+        .hud-ring.r3 {
+            width: 1150px;
+            height: 1150px;
+            animation: radarPing 5s ease-out infinite 3s;
+        }
+
+        @keyframes radarPing {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.6);
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.4);
+            }
+        }
+
+        /* Vertical Scanning Line */
         .hud-scanline {
             position: absolute;
             left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary) 30%, var(--primary) 70%, transparent);
+            opacity: 0.8;
+            animation: scanVertical 6s linear infinite;
             box-shadow: 0 0 20px var(--glow);
-            animation: scan 4s linear infinite;
         }
 
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
+        @keyframes scanVertical {
+            0% { top: 0; opacity: 0; }
+            5% { opacity: 0.8; }
+            95% { opacity: 0.8; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        /* MAIN CONTENT - LAYER 2 */
-        .content {
-            position: relative;
-            z-index: 2;
+        /* HUD Data Readouts - Enhanced */
+        .hud-indicator {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--glow);
+            letter-spacing: 3px;
+            animation: dataFlicker 2s ease-in-out infinite;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .hud-indicator.tl { 
+            top: 8%; 
+            left: 6%; 
+        }
+
+        .hud-indicator.tl::before {
+            content: 'ALT';
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-bottom: 0.2rem;
+        }
+
+        .hud-indicator.tr { 
+            top: 8%; 
+            right: 6%; 
+        }
+
+        .hud-indicator.tr::before {
+            content: 'SPD';
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-bottom: 0.2rem;
+        }
+
+        .hud-indicator.bl { 
+            bottom: 8%; 
+            left: 6%; 
+        }
+
+        .hud-indicator.bl::before {
+            content: 'HDG';
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-bottom: 0.2rem;
+        }
+
+        .hud-indicator.br { 
+            bottom: 8%; 
+            right: 6%; 
+        }
+
+        .hud-indicator.br::before {
+            content: 'RNG';
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-bottom: 0.2rem;
+        }
+
+        @keyframes dataFlicker {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        /* TARGET LOCKED - RED WARNING */
+        .weapon-lock {
+            position: absolute;
+            top: 38%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1.2rem 3rem;
+            border: 3px solid #ff0000;
+            background: rgba(255, 0, 0, 0.15);
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 1);
+            letter-spacing: 4px;
+            animation: lockPulse 0.8s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6), inset 0 0 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .weapon-lock::before {
+            content: '◄';
+            position: absolute;
+            left: 0.5rem;
+            animation: lockArrowLeft 0.8s ease-in-out infinite;
+        }
+
+        .weapon-lock::after {
+            content: '►';
+            position: absolute;
+            right: 0.5rem;
+            animation: lockArrowRight 0.8s ease-in-out infinite;
+        }
+
+        @keyframes lockPulse {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.4), inset 0 0 10px rgba(255, 0, 0, 0.2);
+                border-color: #ff0000;
+            }
+            50% { 
+                box-shadow: 0 0 50px rgba(255, 0, 0, 0.9), inset 0 0 30px rgba(255, 0, 0, 0.4);
+                border-color: #ff3333;
+            }
+        }
+
+        @keyframes lockArrowLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-5px); }
+        }
+
+        @keyframes lockArrowRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* Velocity Vector */
+        .velocity-vector {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .velocity-vector::before,
+        .velocity-vector::after {
+            content: '';
+            position: absolute;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .velocity-vector::before {
+            width: 3px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .velocity-vector::after {
+            width: 20px;
+            height: 3px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Angle of Attack Indicator */
+        .aoa-indicator {
+            position: absolute;
+            top: 50%;
+            right: 15%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 200px;
+            background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.3) 20%, rgba(0, 212, 255, 0.5) 50%, rgba(255, 170, 0, 0.5) 70%, rgba(255, 0, 0, 0.5) 90%, transparent);
+            border-radius: 2px;
+        }
+
+        .aoa-indicator::after {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            width: 13px;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--glow);
+            animation: aoaMove 4s ease-in-out infinite;
+        }
+
+        @keyframes aoaMove {
+            0%, 100% { top: 60%; }
+            50% { top: 40%; }
+        }
+
+        /* Horizon Line */
+        .horizon-line {
+            position: absolute;
+            left: 25%;
+            right: 25%;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+            box-shadow: 0 0 10px var(--glow);
+            transform: translateY(-50%);
+        }
+
+        .horizon-line::before,
+        .horizon-line::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 2px;
+            background: var(--primary);
+            top: 0;
+        }
+
+        .horizon-line::before {
+            left: -80px;
+            transform: rotate(-15deg);
+            transform-origin: right center;
+        }
+
+        .horizon-line::after {
+            right: -80px;
+            transform: rotate(15deg);
+            transform-origin: left center;
+        }
+
+        /* Missile Warning System */
+        .missile-warning {
+            position: absolute;
+            top: 15%;
+            right: 15%;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 170, 0, 0.1);
+            border: 2px solid var(--warning);
+            border-radius: 6px;
+            color: var(--warning);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: warningBlink 1s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes warningBlink {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; box-shadow: 0 0 20px rgba(255, 170, 0, 0.6); }
         }
 
         /* Scroll Progress */
@@ -354,11 +626,11 @@
             position: fixed;
             top: 0;
             left: 0;
+            width: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            z-index: 9999;
-            box-shadow: 0 0 10px var(--glow);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--primary), var(--warning), var(--accent));
+            z-index: 10000;
+            box-shadow: 0 0 20px var(--glow);
         }
 
         /* Header */
@@ -366,231 +638,240 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(10, 14, 39, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid var(--border);
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            border-bottom: 2px solid var(--border);
         }
 
         header.scrolled {
-            background: rgba(10, 14, 39, 0.95);
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(10, 14, 39, 0.98);
+            box-shadow: 0 10px 50px rgba(0, 212, 255, 0.3);
         }
 
         nav {
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1.2rem 3rem;
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 20px var(--glow);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 4px;
         }
 
         .nav-links {
             display: flex;
+            gap: 2.5rem;
             list-style: none;
-            gap: 3rem;
         }
 
         .nav-links a {
-            color: var(--text-primary);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s;
             position: relative;
+            padding: 0.5rem 0;
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 0;
             height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
             box-shadow: 0 0 10px var(--glow);
+            transition: width 0.3s;
         }
 
         .nav-links a:hover {
             color: var(--primary);
+            text-shadow: 0 0 10px var(--glow);
         }
 
         .nav-links a:hover::after {
             width: 100%;
         }
 
-        /* Hero Section */
+        /* Hero */
         .hero {
+            position: relative;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 2rem;
+            padding: 12rem 3rem 8rem;
+        }
+
+        .hero-content {
             position: relative;
+            z-index: 10;
+            max-width: 1400px;
         }
 
         .hero h1 {
-            font-size: 5rem;
+            font-size: 6.5rem;
             font-weight: 900;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            text-shadow: 0 0 30px var(--glow);
-            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--primary));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -4px;
+            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5));
         }
 
         .hero .subtitle {
             font-size: 1.8rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
-
-        .hero .clearance-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent), var(--warning));
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 1.3rem;
             margin-bottom: 3rem;
-            box-shadow: 0 5px 30px rgba(255, 51, 102, 0.5);
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            font-weight: 300;
+            letter-spacing: 2px;
         }
 
         .hero-badges {
             display: flex;
             gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .badge {
-            background: rgba(21, 25, 50, 0.8);
-            border: 2px solid var(--border);
-            padding: 1.5rem 2.5rem;
-            border-radius: 15px;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-weight: 900;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
         }
 
-        .badge:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px var(--glow);
+        .clearance-badge {
+            background: linear-gradient(135deg, var(--accent), #ff3399);
+            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.6);
+            animation: clearancePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes clearancePulse {
+            0%, 100% { box-shadow: 0 20px 60px rgba(255, 51, 102, 0.6); }
+            50% { box-shadow: 0 25px 80px rgba(255, 51, 102, 0.9); }
+        }
+
+        .clearance-badge:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .location-badge {
+            background: rgba(0, 212, 255, 0.1);
+            border: 3px solid var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .location-badge:hover {
+            background: rgba(0, 212, 255, 0.2);
             transform: translateY(-5px);
         }
 
-        /* Section Styles */
-        section {
-            max-width: 1400px;
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 8rem 2rem;
+            padding: 5rem 3rem;
+        }
+
+        section {
+            margin-bottom: 8rem;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 6rem;
+            margin-bottom: 4rem;
         }
 
         .section-title {
             font-size: 3.5rem;
             font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 30px var(--glow);
-            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.4));
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 15px var(--glow);
         }
 
         .section-subtitle {
-            font-size: 1.4rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto;
+            font-size: 1.2rem;
+            margin-top: 2rem;
         }
 
-        /* About Section */
-        .about-content {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
-            padding: 4rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .about-content p {
-            font-size: 1.25rem;
-            line-height: 2;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        /* Professional Summary */
-        .summary-content {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
-            padding: 4rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .summary-content p {
-            font-size: 1.25rem;
-            line-height: 2;
-            color: var(--text-secondary);
-        }
-
-        /* Timeline/Experience */
-        .timeline-container {
-            max-height: 800px;
-            overflow-y: auto;
-            padding-right: 1rem;
-        }
-
-        .timeline-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .timeline-container::-webkit-scrollbar-track {
-            background: rgba(21, 25, 50, 0.5);
-            border-radius: 10px;
-        }
-
-        .timeline-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--glow);
-        }
-
-        .timeline-item {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
             padding: 3rem;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 25px 80px rgba(0, 212, 255, 0.3);
+            transform: translateY(-10px);
+        }
+
+        /* Timeline */
+        .timeline-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
             border-radius: 20px;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+            transition: all 0.4s;
         }
 
         .timeline-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-            transform: translateX(10px);
+            box-shadow: 0 25px 80px rgba(0, 212, 255, 0.3);
+            transform: translateX(20px);
         }
 
         .timeline-header {
@@ -598,118 +879,160 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 2rem;
-            flex-wrap: wrap;
             gap: 2rem;
         }
 
         .timeline-title h3 {
-            font-size: 2rem;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
         .timeline-role {
-            font-size: 1.3rem;
             color: var(--text-secondary);
+            font-size: 1.3rem;
             font-style: italic;
+            font-weight: 300;
         }
 
         .timeline-date {
             color: var(--accent);
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 900;
+            font-size: 1.1rem;
         }
 
         .timeline-item ul {
             list-style: none;
-            margin-left: 0;
+            margin-top: 2rem;
         }
 
         .timeline-item li {
-            padding-left: 2rem;
+            padding-left: 2.5rem;
             margin-bottom: 1rem;
             position: relative;
             color: var(--text-secondary);
+            font-size: 1.05rem;
             line-height: 1.8;
-            font-size: 1.1rem;
         }
 
         .timeline-item li::before {
-            content: '▸';
+            content: '▹';
             position: absolute;
             left: 0;
             color: var(--primary);
-            font-weight: bold;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--glow);
         }
 
-        /* Projects Grid - SCROLLABLE */
-        .projects-container {
-            max-height: 1000px;
-            overflow-y: auto;
-            padding-right: 1rem;
-        }
-
-        .projects-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .projects-container::-webkit-scrollbar-track {
-            background: rgba(21, 25, 50, 0.5);
-            border-radius: 10px;
-        }
-
-        .projects-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--glow);
-        }
-
-        .projects-grid {
+        /* Skills Grid */
+        .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 3rem;
         }
 
-        .project-card {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+        .skill-category {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            transition: all 0.4s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--primary);
+            box-shadow: 0 25px 80px rgba(0, 212, 255, 0.3);
+            transform: translateY(-10px);
+        }
+
+        .skill-category h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .skill-item {
+            padding: 1.3rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 16px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--primary);
+            transform: translateX(12px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .skill-item strong {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .skill-item p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+            gap: 3.5rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s;
         }
 
         .project-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.4);
-            transform: translateY(-10px);
+            box-shadow: 0 30px 90px rgba(0, 212, 255, 0.4);
+            transform: translateY(-15px);
         }
 
         .project-image-container {
-            width: 100%;
-            height: 250px;
+            height: 320px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.6s;
         }
 
         .project-card:hover .project-image {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
 
         .project-placeholder {
-            font-size: 5rem;
-            opacity: 0.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 6rem;
+            color: rgba(255, 255, 255, 0.15);
         }
 
         .project-content {
@@ -717,167 +1040,150 @@
         }
 
         .project-header h3 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--primary);
+            font-weight: 900;
             margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
         .project-tech {
             color: var(--accent);
-            font-size: 0.95rem;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 1.5rem;
-            font-weight: 600;
         }
 
         .project-description {
             color: var(--text-secondary);
+            font-size: 1.05rem;
             line-height: 1.8;
             margin-bottom: 2rem;
         }
 
-        /* Skills Section - SCROLLABLE */
-        .skills-container {
-            max-height: 1000px;
-            overflow-y: auto;
-            padding-right: 1rem;
-        }
-
-        .skills-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .skills-container::-webkit-scrollbar-track {
-            background: rgba(21, 25, 50, 0.5);
-            border-radius: 10px;
-        }
-
-        .skills-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--glow);
-        }
-
-        .skill-category {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
-            padding: 3rem;
-            border-radius: 20px;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .skill-category h3 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 2rem;
-            text-shadow: 0 0 20px var(--glow);
-        }
-
-        .skill-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .skill-item:hover {
-            border-color: var(--primary);
-            background: rgba(0, 212, 255, 0.1);
-            transform: translateX(10px);
-        }
-
-        .skill-item strong {
-            color: var(--primary);
-            font-size: 1.2rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-item p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* Buttons */
         .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 1.1rem 2.5rem;
+            border-radius: 14px;
             border: none;
-            text-decoration: none;
-            display: inline-block;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
         }
 
         .btn-primary:hover {
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.6);
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.6);
         }
 
         .btn-secondary {
-            background: rgba(21, 25, 50, 0.8);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--primary);
             border: 2px solid var(--primary);
         }
 
         .btn-secondary:hover {
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(0, 212, 255, 0.2);
             transform: translateY(-3px);
         }
 
-        /* Education Section */
-        .education-card {
-            background: rgba(21, 25, 50, 0.6);
-            border: 2px solid var(--border);
+        /* Resume Viewer */
+        .resume-viewer {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
             padding: 3rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .resume-viewer::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .resume-viewer::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .resume-viewer::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .resume-section {
+            margin-bottom: 3rem;
+        }
+
+        .resume-section h3 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Education */
+        .education-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            transition: all 0.4s;
         }
 
         .education-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 25px 80px rgba(0, 212, 255, 0.3);
+            transform: translateY(-10px);
         }
 
         .education-card h3 {
-            font-size: 2rem;
             color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 900;
             margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
-        .education-card p {
-            font-size: 1.2rem;
+        .education-card .degree {
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
         }
 
-        .date {
+        .education-card .date {
             color: var(--accent);
-            font-weight: 700;
+            font-weight: 900;
+            font-size: 1.2rem;
         }
 
-        /* Contact Section */
+        /* Contact */
         .contact {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 102, 255, 0.1));
+            padding: 6rem 3rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
             text-align: center;
         }
 
         .contact-info {
             display: flex;
             justify-content: center;
-            gap: 5rem;
+            gap: 4rem;
             flex-wrap: wrap;
+            margin-top: 3rem;
         }
 
         .contact-item {
@@ -885,57 +1191,74 @@
             flex-direction: column;
             align-items: center;
             gap: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-8px);
         }
 
         .contact-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
+            filter: drop-shadow(0 0 15px var(--glow));
         }
 
-        .contact-item a,
-        .contact-item span {
-            color: var(--text-primary);
+        .contact-item a, .contact-item span {
+            color: var(--primary);
             text-decoration: none;
-            font-size: 1.2rem;
-            transition: color 0.3s ease;
+            font-weight: 800;
+            font-size: 1.3rem;
+            transition: all 0.3s;
         }
 
         .contact-item a:hover {
-            color: var(--primary);
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--glow);
         }
 
-        /* Modal Styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 20000;
             overflow-y: auto;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
         }
 
         .modal.active {
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 2rem;
+            justify-content: center;
         }
 
         .modal-content {
             background: var(--card-bg);
             border: 2px solid var(--border);
-            border-radius: 20px;
+            border-radius: 28px;
             padding: 4rem;
-            max-width: 900px;
-            width: 100%;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            max-width: 1000px;
+            width: 90%;
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 100px rgba(0, 212, 255, 0.3);
         }
 
-        .project-modal-content {
-            max-width: 1200px;
+        .modal-content::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--glow);
         }
 
         .modal-close {
@@ -944,63 +1267,81 @@
             right: 2rem;
             background: none;
             border: none;
-            color: var(--text-primary);
+            color: var(--text-secondary);
             font-size: 3rem;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: all 0.3s;
             line-height: 1;
         }
 
         .modal-close:hover {
             color: var(--accent);
+            transform: rotate(90deg) scale(1.3);
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.8);
         }
 
         .modal-title {
-            font-size: 2.5rem;
             color: var(--primary);
+            font-size: 3rem;
+            font-weight: 900;
             margin-bottom: 2rem;
-            text-shadow: 0 0 20px var(--glow);
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Project Modal */
+        .project-modal-content {
+            max-width: 1600px;
+            padding: 0;
         }
 
         .project-modal-header {
-            margin-bottom: 3rem;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 102, 255, 0.1));
+            border-bottom: 1px solid var(--border);
         }
 
-        .project-modal-body ul {
-            margin-left: 2rem;
-            color: var(--text-secondary);
-            line-height: 2;
-        }
-
-        .project-modal-body h4 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin: 3rem 0 1.5rem;
+        .project-modal-body {
+            padding: 4rem;
+            max-height: 70vh;
+            overflow-y: auto;
         }
 
         .project-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
         }
 
         .gallery-item {
-            border-radius: 10px;
+            aspect-ratio: 16/9;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
             overflow: hidden;
-            border: 2px solid var(--border);
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
         .gallery-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 20px var(--glow);
+            transform: scale(1.08);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.4);
         }
 
         .gallery-item img {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
+        }
+
+        .gallery-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 4rem;
+            color: var(--text-secondary);
         }
 
         .file-item {
@@ -1008,11 +1349,11 @@
             align-items: center;
             gap: 2rem;
             padding: 2rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
             margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
         }
 
         .file-item:hover {
@@ -1035,19 +1376,78 @@
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 3.5rem; }
-            nav { flex-direction: column; gap: 1.5rem; }
-            .nav-links { flex-direction: column; gap: 1rem; text-align: center; }
+            nav { 
+                flex-direction: row; 
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            /* Hamburger Menu Button */
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: 2px solid var(--primary);
+                color: var(--primary);
+                font-size: 1.5rem;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .menu-toggle:hover {
+                background: var(--primary);
+                color: var(--dark-bg);
+            }
+            
+            /* Hide nav links by default on mobile */
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                background: rgba(10, 14, 39, 0.98);
+                width: 80%;
+                max-width: 300px;
+                height: calc(100vh - 80px);
+                flex-direction: column;
+                gap: 0;
+                padding: 2rem 0;
+                transition: right 0.3s ease;
+                border-left: 2px solid var(--primary);
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.8);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                width: 100%;
+                padding: 0;
+                border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            }
+            
+            .nav-links a {
+                display: block;
+                padding: 1.5rem 2rem;
+                width: 100%;
+            }
+            
             .skills-grid, .projects-grid { grid-template-columns: 1fr; }
             .section-title { font-size: 2.5rem; }
             .timeline-header { flex-direction: column; }
             .contact-info { flex-direction: column; gap: 3rem; }
             .hero-badges { flex-direction: column; }
         }
+        
+        /* Hide hamburger on desktop */
+        .menu-toggle {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Admin Access Button - REMOVED FOR PUBLIC VERSION -->
-
     <div class="scroll-progress" id="scrollProgress"></div>
     
     <!-- Hero Image Slideshow -->
@@ -1057,7 +1457,11 @@
     <div class="hud-overlay">
         <div class="hud-grid"></div>
         <div class="hud-reticle"></div>
-        <div class="hud-reticle-inner"></div>
+        <div class="hud-crosshair vertical"></div>
+        <div class="hud-crosshair horizontal"></div>
+        <div class="hud-ring r1"></div>
+        <div class="hud-ring r2"></div>
+        <div class="hud-ring r3"></div>
         <div class="hud-corner tl"></div>
         <div class="hud-corner tr"></div>
         <div class="hud-corner bl"></div>
@@ -1073,9 +1477,10 @@
     <header id="header">
         <nav>
             <div class="logo">RM</div>
-            <ul class="nav-links">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#about">About</a></li>
-                <li><a href="#summary">Summary</a></li>
+                <li><a href="#resume">Resume</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -1085,83 +1490,77 @@
         </nav>
     </header>
 
-    <div class="content">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1 id="heroName">RAYSHAUN MASON</h1>
-            <p class="subtitle" id="heroTitle">Elite Defense Systems Engineer</p>
-            <div class="clearance-badge">🔒 SECRET SECURITY CLEARANCE</div>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>RAYSHAUN MASON</h1>
+            <p class="subtitle">Model-Based Systems Engineering | Weapons Integration | Advanced Diagnostics</p>
             <div class="hero-badges">
-                <div class="badge">🎯 MBSE Expert</div>
-                <div class="badge">🚀 Weapon Systems</div>
-                <div class="badge">💻 Python Specialist</div>
-                <div class="badge">✈️ F-35 Program</div>
+                <span class="badge clearance-badge">🔒 SECRET SECURITY CLEARANCE</span>
+                <span class="badge location-badge">📍 FORT WORTH, TEXAS</span>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- About Section -->
+    <div class="container">
+        <!-- About -->
         <section id="about">
             <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">Elite Systems Engineer with Classified Defense Experience</p>
-            </div>
-            <div class="about-content" id="aboutContent">
-                <p>Loading about content...</p>
-            </div>
-        </section>
-
-        <!-- Professional Summary -->
-        <section id="summary">
-            <div class="section-header">
                 <h2 class="section-title">Professional Summary</h2>
+                <p class="section-subtitle">Elite Systems Engineer with proven expertise in defense applications</p>
             </div>
-            <div class="summary-content" id="summaryContent">
-                <p>Loading summary...</p>
+            <div class="card">
+                <p style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.9;">
+                    Dynamic Systems Engineer with extensive experience at Lockheed Martin, excelling in Model-Based Systems Engineering and advanced diagnostics. Proven track record in enhancing weapon technology integration and achieving a 95% first-time fix rate in automotive repairs. Skilled in Python and fostering strong customer relations, driving project success through collaboration and innovation.
+                </p>
             </div>
         </section>
 
-        <!-- Experience Section -->
+        <!-- Resume -->
+        <section id="resume">
+            <div class="section-header">
+                <h2 class="section-title">Complete Resume</h2>
+                <p class="section-subtitle">Full professional documentation and career history</p>
+            </div>
+            <div class="resume-viewer" id="resumeContent"></div>
+        </section>
+
+        <!-- Experience -->
         <section id="experience">
             <div class="section-header">
                 <h2 class="section-title">Professional Experience</h2>
-                <p class="section-subtitle">Proven track record in defense systems engineering</p>
+                <p class="section-subtitle">Delivering excellence in defense systems engineering</p>
             </div>
-            <div class="timeline-container" id="experienceContainer">
-                <!-- Dynamic content will be loaded here -->
-            </div>
+            <div id="experienceContainer"></div>
         </section>
 
-        <!-- Projects Section -->
+        <!-- Projects -->
         <section id="projects">
             <div class="section-header">
                 <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">Advanced engineering solutions and innovations</p>
+                <p class="section-subtitle">Click to explore detailed galleries and documentation</p>
             </div>
-            <div class="projects-container">
-                <div class="projects-grid" id="projectsContainer">
-                    <!-- Dynamic content will be loaded here -->
-                </div>
-            </div>
+            <div class="projects-grid" id="projectsContainer"></div>
         </section>
 
-        <!-- Skills Section -->
+        <!-- Skills -->
         <section id="skills">
             <div class="section-header">
                 <h2 class="section-title">Technical Expertise</h2>
-                <p class="section-subtitle">Comprehensive skillset across defense systems</p>
+                <p class="section-subtitle">Click any skill for comprehensive details and applications</p>
             </div>
-            <div class="skills-container" id="skillsContainer">
-                <!-- Dynamic content will be loaded here -->
-            </div>
+            <div class="skills-grid" id="skillsContainer"></div>
         </section>
 
-        <!-- Education Section -->
+        <!-- Education -->
         <section id="education">
             <div class="section-header">
                 <h2 class="section-title">Education</h2>
             </div>
-            <div class="education-card" id="educationContent">
-                <p>Loading education...</p>
+            <div class="education-card">
+                <h3>Virginia State University</h3>
+                <p class="degree">Bachelor of Applied Science in Mechanical Engineering Technology</p>
+                <p class="date">Graduated: May 2022</p>
+                <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1.15rem;">Petersburg, VA</p>
             </div>
         </section>
 
@@ -1172,14 +1571,25 @@
                     <h2 class="section-title">Get In Touch</h2>
                     <p class="section-subtitle">Ready for immediate deployment on critical defense projects</p>
                 </div>
-                <div class="contact-info" id="contactInfo">
-                    <!-- Dynamic content will be loaded here -->
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <a href="mailto:masonray0@gmail.com">masonray0@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <span>(804) 653-2912</span>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💼</div>
+                        <a href="https://linkedin.com/in/rayshaun-mason" target="_blank">LinkedIn Profile</a>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Skill Modal -->
+    <!-- Modals -->
     <div class="modal" id="skillModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('skillModal')">&times;</button>
@@ -1188,7 +1598,6 @@
         </div>
     </div>
 
-    <!-- Project Modal -->
     <div class="modal" id="projectModal">
         <div class="modal-content project-modal-content">
             <div class="project-modal-header">
@@ -1205,66 +1614,61 @@
         </div>
     </div>
 
-    <script src="portfolio-data.js"></script>
     <script>
-        // Initialize portfolio
-        function init() {
-            loadPortfolioData();
-            initHeroSlideshow();
-            initScrollEffects();
-        }
+        const CONFIG = {
+            name: "RAYSHAUN MASON",
+            contact: { email: "masonray0@gmail.com", phone: "(804) 653-2912", linkedin: "https://linkedin.com/in/rayshaun-mason" },
+            heroBackgrounds: [],
+            slideshowSpeed: 7000
+        };
 
-        function loadPortfolioData() {
-            const data = getPortfolioData();
-            
-            // Load hero
-            document.getElementById('heroName').textContent = data.name;
-            document.getElementById('heroTitle').textContent = data.title;
-            
-            // Load about
-            document.getElementById('aboutContent').innerHTML = `<p>${data.about}</p>`;
-            
-            // Load summary
-            document.getElementById('summaryContent').innerHTML = `<p>${data.summary}</p>`;
-            
-            // Load experience
-            renderExperience(data.experiences);
-            
-            // Load projects
-            renderProjects(data.projects);
-            
-            // Load skills
-            renderSkills(data.skills);
-            
-            // Load education
-            document.getElementById('educationContent').innerHTML = `
-                <h3>${data.education.school}</h3>
-                <p>${data.education.degree}</p>
-                <p class="date">Graduated: ${data.education.graduationDate}</p>
-                <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 1.15rem;">${data.education.location}</p>
-            `;
-            
-            // Load contact
-            document.getElementById('contactInfo').innerHTML = `
-                <div class="contact-item">
-                    <div class="contact-icon">📧</div>
-                    <a href="mailto:${data.contact.email}">${data.contact.email}</a>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📱</div>
-                    <span>${data.contact.phone}</span>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">💼</div>
-                    <a href="${data.contact.linkedin}" target="_blank">LinkedIn Profile</a>
-                </div>
-            `;
+        const experiences = [
+            { company: "Lockheed Martin", role: "Engineering Verification and Validation (EV & V) Simulations & Tests Engineer / Systems Engineer", dates: "June 2022 - Present", location: "Fort Worth, TX", clearance: true, responsibilities: ["Collaborate with internal and external stakeholders to align technical parameters, interfaces, and assumptions, ensuring hardware and software objectives are met according to MIL-STD-1760", "Validate requirements for capabilities through various verification methods, presenting results to Subject Matter Experts (SMEs) for concurrence", "Coordinate and lead Air System Technical Coordination Meetings (ASTCM) for new and pending requirements, ensuring cross-functional alignment of weapons technology like IRST", "Cross-reference high-level requirements with technical data, translating customer needs and contracts into the product development cycle", "Prepare detailed Verification Activity Plans (VAPs), Verification Results Reports (VRRs), and design statements based on lab results and automated test shifts", "Utilize Model-Based Systems Engineering (MBSE) and DevOps tools, including Rhapsody, Cameo, DOORs, Dimensions, Catia V5, SIMs, and Python, to develop and decompose system requirements, architectures, and validation plans"] },
+            { company: "Lockheed Martin Aeronautics", role: "Model Based Systems Engineering Intern - F-35 JSF Software Configuration Management", dates: "May 2021 - August 2021", location: "Fort Worth, TX", clearance: true, responsibilities: ["Managed the F-35 software product release lifecycle using Dimensions CM", "Created an international shipping document formalizing the process of shipping International Traffic in Arms Regulations (ITAR) software artifacts", "Executed formal software deployments to customers both domestically and internationally", "Ensured compliance with export control regulations and software configuration baseline management"] },
+            { company: "Lockheed Martin Skunk Works", role: "Human Performance Engineering (HPE) / Maintainer Vehicle Integration (MVI) Intern", dates: "May 2020 - August 2021", location: "Fort Worth, TX", clearance: true, responsibilities: ["Performed Software Stability Metrics through the utilization of MATLAB, CRE, and Jarvis to obtain data collection and create self-diagnostic software on F-35 jet systems", "Worked on Pilot Vehicle Interface (PVI) for the F-35 and F-16 fighter systems", "Gained familiarization with Joint Technical Data (JTD) and Flight Series Data (FSD) database systems", "Contributed to maintainability analysis and human factors engineering studies"] },
+            { company: "Formula-1 SAE Racecar", role: "Lead Intern", dates: "June 2019 - August 2019", location: "Ettrick, VA", clearance: false, responsibilities: ["Directed a team in the development of a chassis system resulting in 15% improved performance", "Utilized CAD-based software to model future F1 car projects", "Composed research proposal for three-month development timeline", "Project fully funded by Lockheed Martin"] },
+            { company: "Pearson / West Broad Honda", role: "Automotive Technician", dates: "June 2016 - Present", location: "Midlothian, VA", clearance: false, responsibilities: ["Achieve 95% first-time fix rate through advanced diagnostics and troubleshooting", "Perform diagnostics and repairs on complex systems including engine, transmission, electrical, and HVAC", "Specialize in advanced troubleshooting utilizing OBD-II, OEM diagnostic tools, and digital oscilloscopes", "Conduct pre-delivery inspections for high-end vehicles ensuring manufacturer standards compliance", "Mentor and train junior technicians on advanced diagnostics, safe tool use, and repair techniques"] }
+        ];
+
+        const projects = [
+            { title: "AR-15 & AK-47 Weapons Platform Development", technologies: "Mechanical Design • Ballistics • Manufacturing • Testing • GD&T", shortDescription: "Developed complete AR-15 and AK-47 weapon platforms from scratch, demonstrating expertise in firearms technology and precision manufacturing.", detailedDescription: `<p style="margin-bottom: 2rem; font-size: 1.15rem;">Comprehensive weapon system development project involving complete design, fabrication, and testing of reliable firearm platforms.</p><h4 style="color: var(--primary); margin: 2.5rem 0 1.5rem; font-size: 2rem; font-weight: 900;">Key Accomplishments:</h4><ul style="margin-left: 2.5rem; color: var(--text-secondary); line-height: 2; font-size: 1.1rem;"><li>Designed and manufactured complete barrel assemblies with button rifling</li><li>Developed custom trigger mechanisms with crisp break and minimal creep</li><li>Optimized gas system for reliable cycling across ammunition types</li><li>Conducted extensive ballistics testing and accuracy validation</li><li>Full compliance with federal firearms regulations</li></ul>`, images: [], files: [] },
+            { title: "Monte-Carlo Rocket Trajectory Simulations", technologies: "Python • NumPy • Pandas • Statistical Analysis", shortDescription: "Developed probabilistic rocket trajectory simulations using Monte-Carlo methods to predict performance variability and mission success rates.", detailedDescription: `<p style="margin-bottom: 2rem; font-size: 1.15rem;">Created sophisticated simulation framework for analyzing rocket flight characteristics under various conditions and uncertainties.</p><h4 style="color: var(--primary); margin: 2.5rem 0 1.5rem; font-size: 2rem; font-weight: 900;">Simulation Capabilities:</h4><ul style="margin-left: 2.5rem; color: var(--text-secondary); line-height: 2; font-size: 1.1rem;"><li>10,000+ trajectory simulations per analysis run for statistical confidence</li><li>Atmospheric variation modeling including wind shear, temperature gradients, and pressure variations</li><li>Propellant performance variability analysis accounting for manufacturing tolerances</li><li>Statistical confidence interval generation for mission planning</li><li>2% accuracy vs actual flight data</li></ul>`, images: [], files: [] },
+            { title: "F-35 Weapon System Integration - MBSE", technologies: "Rhapsody • DOORs • Cameo • Python • MIL-STD-1760", shortDescription: "Led Model-Based Systems Engineering efforts for advanced weapon system integration on F-35 tactical fighter platform.", detailedDescription: `<p style="margin-bottom: 2rem; font-size: 1.15rem;">Managed complex system requirements and validation for cutting-edge weapon systems on the F-35 Joint Strike Fighter.</p><h4 style="color: var(--primary); margin: 2.5rem 0 1.5rem; font-size: 2rem; font-weight: 900;">Technical Achievements:</h4><ul style="margin-left: 2.5rem; color: var(--text-secondary); line-height: 2; font-size: 1.1rem;"><li>Achieved 100% requirements traceability through DOORs</li><li>Reduced verification time by 40% through Python automation</li><li>Successfully coordinated integration testing across 4 international sites</li><li>All deliverables met or exceeded customer acceptance criteria</li></ul>`, images: [], files: [] },
+            { title: "Formula SAE Chassis Design & Optimization", technologies: "SolidWorks • FEA • CAD/CAM • Welding", shortDescription: "Led design team in developing lightweight, high-strength race car chassis achieving 15% performance improvement for Formula SAE competition.", detailedDescription: `<p style="margin-bottom: 2rem; font-size: 1.15rem;">Comprehensive race car chassis development project demonstrating structural analysis, optimization, and fabrication skills.</p><h4 style="color: var(--primary); margin: 2.5rem 0 1.5rem; font-size: 2rem; font-weight: 900;">Results:</h4><ul style="margin-left: 2.5rem; color: var(--text-secondary); line-height: 2; font-size: 1.1rem;"><li>Achieved 15% improvement in torsional rigidity while reducing weight by 8%</li><li>Passed all Formula SAE technical inspection requirements</li><li>Team advanced to competition finals</li><li>Project fully funded by Lockheed Martin</li></ul>`, images: [], files: [] }
+        ];
+
+        const skillsData = [
+            { category: "Technical Skills", icon: "⚙️", skills: [
+                { name: "Weapons Technology / Ballistics", description: "Extensive hands-on experience in firearms design, ballistics analysis, and weapon systems integration. Developed complete AR-15 and AK-47 platforms from scratch, including barrel manufacturing, trigger mechanism design, and gas system optimization. Deep understanding of internal, external, and terminal ballistics. Experience with MIL-STD-1760 compliance for weapon integration on tactical fighter aircraft." },
+                { name: "Model-Based Systems Engineering (MBSE)", description: "Expert in developing system architectures using MBSE methodologies. Create functional decompositions, interface definitions, and allocation of requirements to subsystems. Utilize SysML and Rhapsody for architecture modeling. Applied to F-35 weapon integration projects with 100% requirements traceability achievement." },
+                { name: "Monte-Carlo Simulations", description: "Developed sophisticated probabilistic simulation models for rocket trajectory analysis using Python. Incorporate atmospheric variations, propellant inconsistencies, and manufacturing tolerances to predict performance distributions. Achieved 2% accuracy compared to actual flight data." },
+                { name: "Diagnostics and Troubleshooting", description: "Achieved 95% first-time fix rate through systematic diagnostic approach. Expert in using oscilloscopes, multimeters, and OEM diagnostic tools. Experience troubleshooting F-35 avionics systems, automotive electrical systems, and complex mechanical assemblies." }
+            ]},
+            { category: "Software & Programming", icon: "💻", skills: [
+                { name: "Python (Pandas, NumPy)", description: "Expert-level Python programming with focus on data analysis using Pandas. Developed automated verification scripts reducing test time by 40%, data processing pipelines, and simulation tools. Created Monte-Carlo simulation frameworks and automated test result analysis tools." },
+                { name: "Rhapsody", description: "Advanced proficiency in IBM Rational Rhapsody for Model-Based Systems Engineering. Create state machines, sequence diagrams, and activity diagrams. Apply Rhapsody in F-35 software configuration management and system architecture development." },
+                { name: "DOORs", description: "Expert in IBM Rational DOORS for requirements management on defense programs. Create requirement hierarchies, traceability matrices, and impact analysis. Achieved 100% traceability on F-35 weapon integration projects." },
+                { name: "CATIA V5", description: "Professional certification in Dassault Systèmes CATIA V5, the primary CAD system for aerospace design. Used extensively in Lockheed Martin environment for F-35 component design and modification." }
+            ]},
+            { category: "Certifications & Licenses", icon: "🏆", skills: [
+                { name: "Secret Security Clearance", description: "Active Secret Security Clearance enabling immediate contributions to classified defense programs. Extensive experience working on F-35 Joint Strike Fighter program with access to ITAR-controlled information. Ready for immediate deployment on sensitive projects." },
+                { name: "CATIA V5 Certified (August 2014)", description: "Professional certification in Dassault Systèmes CATIA V5, demonstrating proficiency in advanced surface modeling, assembly design, and engineering documentation." },
+                { name: "AI Fundamentals Certified (September 2025)", description: "Foundational certification covering machine learning concepts, neural networks, and AI applications in engineering. Exploring applications in predictive maintenance and autonomous systems for defense applications." }
+            ]}
+        ];
+
+        function init() {
+            initHeroSlideshow();
+            renderResume();
+            renderExperience();
+            renderProjects();
+            renderSkills();
+            initScrollEffects();
         }
 
         function initHeroSlideshow() {
             const slideshow = document.getElementById('heroSlideshow');
-            const data = getPortfolioData();
-            const backgrounds = data.heroBackgrounds.length > 0 ? data.heroBackgrounds : [
+            const backgrounds = CONFIG.heroBackgrounds.length > 0 ? CONFIG.heroBackgrounds : [
                 'linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%)',
                 'linear-gradient(135deg, #0a2463 0%, #3e92cc 50%, #0a2463 100%)',
                 'linear-gradient(135deg, #1e1e24 0%, #2a3250 50%, #1e1e24 100%)'
@@ -1273,7 +1677,7 @@
             backgrounds.forEach((bg, i) => {
                 const slide = document.createElement('div');
                 slide.className = 'hero-slide';
-                if (bg.startsWith('http') || bg.startsWith('data:')) {
+                if (CONFIG.heroBackgrounds.length > 0) {
                     slide.style.backgroundImage = `url(${bg})`;
                 } else {
                     slide.style.background = bg;
@@ -1288,72 +1692,46 @@
                 slides[current].classList.remove('active');
                 current = (current + 1) % slides.length;
                 slides[current].classList.add('active');
-            }, 7000);
+            }, CONFIG.slideshowSpeed);
         }
 
-        function renderExperience(experiences) {
+        function renderResume() {
+            document.getElementById('resumeContent').innerHTML = `
+                <div class="resume-section"><h3>OBJECTIVE</h3><p style="color: var(--text-secondary); line-height: 1.9;">Dynamic Systems Engineer with extensive experience at Lockheed Martin, excelling in Model-Based Systems Engineering and advanced diagnostics.</p></div>
+                <div class="resume-section"><h3>EDUCATION</h3><p><strong style="color: var(--primary);">Virginia State University</strong> - Petersburg, VA</p><p>Bachelor of Applied Science in Mechanical Engineering Technology</p><p>Graduated: May 2022</p></div>
+                <div class="resume-section"><h3>PROFESSIONAL EXPERIENCE</h3>
+                ${experiences.map(exp => `<div style="margin-bottom: 2rem;"><p style="color: var(--primary); font-size: 1.3rem; font-weight: bold;">${exp.company}</p><p style="font-style: italic;">${exp.role}</p><p style="color: var(--accent);">${exp.dates} | ${exp.location}</p>${exp.clearance ? '<p style="color: var(--accent);">🔒 Secret Security Clearance</p>' : ''}<ul style="margin-left: 2rem; margin-top: 0.5rem;">${exp.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function renderExperience() {
             const container = document.getElementById('experienceContainer');
-            container.innerHTML = '';
             experiences.forEach(exp => {
                 const div = document.createElement('div');
                 div.className = 'timeline-item';
-                div.innerHTML = `
-                    <div class="timeline-header">
-                        <div class="timeline-title">
-                            <h3>${exp.company}</h3>
-                            <p class="timeline-role">${exp.role}</p>
-                            ${exp.clearance ? '<p style="color: var(--accent); margin-top: 1rem; font-weight: 800; font-size: 1.2rem;">🔒 Secret Security Clearance</p>' : ''}
-                        </div>
-                        <div class="timeline-date">${exp.dates}</div>
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.2rem;">${exp.location}</p>
-                    <ul>${exp.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul>
-                `;
+                div.innerHTML = `<div class="timeline-header"><div class="timeline-title"><h3>${exp.company}</h3><p class="timeline-role">${exp.role}</p>${exp.clearance ? '<p style="color: var(--accent); margin-top: 1rem; font-weight: 800; font-size: 1.2rem;">🔒 Secret Security Clearance</p>' : ''}</div><div class="timeline-date">${exp.dates}</div></div><p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.2rem;">${exp.location}</p><ul>${exp.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul>`;
                 container.appendChild(div);
             });
         }
 
-        function renderProjects(projects) {
+        function renderProjects() {
             const container = document.getElementById('projectsContainer');
-            container.innerHTML = '';
             projects.forEach((project, i) => {
                 const div = document.createElement('div');
                 div.className = 'project-card';
                 div.onclick = () => openProjectModal(i);
-                div.innerHTML = `
-                    <div class="project-image-container">
-                        ${project.images.length > 0 ? 
-                            `<img src="${project.images[0]}" class="project-image" alt="${project.title}">` : 
-                            '<div class="project-placeholder">🚀</div>'}
-                    </div>
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3>${project.title}</h3>
-                            <p class="project-tech">${project.technologies}</p>
-                        </div>
-                        <p class="project-description">${project.shortDescription}</p>
-                        <button class="btn btn-primary">View Details</button>
-                    </div>
-                `;
+                div.innerHTML = `<div class="project-image-container">${project.images.length > 0 ? `<img src="${project.images[0]}" class="project-image">` : '<div class="project-placeholder">🚀</div>'}</div><div class="project-content"><div class="project-header"><h3>${project.title}</h3><p class="project-tech">${project.technologies}</p></div><p class="project-description">${project.shortDescription}</p><button class="btn btn-primary">View Details</button></div>`;
                 container.appendChild(div);
             });
         }
 
-        function renderSkills(skillsData) {
+        function renderSkills() {
             const container = document.getElementById('skillsContainer');
-            container.innerHTML = '';
             skillsData.forEach(cat => {
                 const div = document.createElement('div');
                 div.className = 'skill-category';
-                div.innerHTML = `
-                    <h3>${cat.icon} ${cat.category}</h3>
-                    ${cat.skills.map(s => `
-                        <div class="skill-item" onclick='openSkillModal(${JSON.stringify(s).replace(/'/g, "&#39;")})'>
-                            <strong>${s.name}</strong>
-                            <p>Click for detailed information →</p>
-                        </div>
-                    `).join('')}
-                `;
+                div.innerHTML = `<h3>${cat.icon} ${cat.category}</h3>${cat.skills.map(s => `<div class="skill-item" onclick='openSkillModal(${JSON.stringify(s).replace(/'/g, "&#39;")})'><strong>${s.name}</strong><p>Click for detailed information →</p></div>`).join('')}`;
                 container.appendChild(div);
             });
         }
@@ -1366,25 +1744,12 @@
         }
 
         function openProjectModal(i) {
-            const data = getPortfolioData();
-            const p = data.projects[i];
+            const p = projects[i];
             document.getElementById('modalProjectTitle').textContent = p.title;
             document.getElementById('modalProjectTech').textContent = p.technologies;
             document.getElementById('modalProjectDescription').innerHTML = p.detailedDescription;
-            document.getElementById('modalProjectGallery').innerHTML = p.images.length > 0 ? 
-                p.images.map(img => `<div class="gallery-item"><img src="${img}" alt="Project image"></div>`).join('') : 
-                '<p style="text-align: center; color: var(--text-secondary); padding: 3rem;">No images available</p>';
-            document.getElementById('modalProjectFiles').innerHTML = p.files.length > 0 ? 
-                `<h3 style="color: var(--primary); margin: 4rem 0 2rem; font-size: 2.5rem;">Supporting Documentation</h3>
-                ${p.files.map(f => `
-                    <div class="file-item">
-                        <span class="file-icon">${f.icon}</span>
-                        <div style="flex: 1;">
-                            <strong style="color: var(--primary);">${f.name}</strong>
-                        </div>
-                        <a href="${f.url}" class="btn btn-secondary" download>Download</a>
-                    </div>
-                `).join('')}` : '';
+            document.getElementById('modalProjectGallery').innerHTML = p.images.length > 0 ? p.images.map(img => `<div class="gallery-item"><img src="${img}"></div>`).join('') : '<p style="text-align: center; color: var(--text-secondary); padding: 3rem;">Add images by updating the images array in project configuration</p>';
+            document.getElementById('modalProjectFiles').innerHTML = p.files.length > 0 ? `<h3 style="color: var(--primary); margin: 4rem 0 2rem; font-size: 2.5rem;">Supporting Documentation</h3>${p.files.map(f => `<div class="file-item"><span class="file-icon">${f.icon}</span><div style="flex: 1;"><strong style="color: var(--primary);">${f.name}</strong></div><button class="btn btn-secondary">Download</button></div>`).join('')}` : '';
             document.getElementById('projectModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1406,15 +1771,37 @@
             });
         }
 
-        document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { 
-            if (e.target === m) closeModal(m.id); 
-        }));
-        
+        document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); }));
         document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
-            if (target) window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+                // Close mobile menu after clicking a link
+                if (window.innerWidth <= 768) {
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            }
         }));
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!e.target.closest('nav') && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
 
         window.addEventListener('DOMContentLoaded', init);
     </script>
