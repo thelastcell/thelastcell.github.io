@@ -799,6 +799,32 @@
             margin: 0 auto;
             padding: 5rem 3rem;
         }
+        
+        /* Scrollable Section Containers */
+        .scrollable-section {
+            max-height: 800px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        
+        .scrollable-section::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .scrollable-section::-webkit-scrollbar-track {
+            background: rgba(21, 25, 50, 0.5);
+            border-radius: 10px;
+        }
+        
+        .scrollable-section::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--glow);
+        }
+        
+        .scrollable-section::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--secondary), var(--primary));
+        }
 
         section {
             margin-bottom: 8rem;
@@ -1480,7 +1506,6 @@
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">About</a></li>
-                <li><a href="#resume">Resume</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -1515,22 +1540,15 @@
             </div>
         </section>
 
-        <!-- Resume -->
-        <section id="resume">
-            <div class="section-header">
-                <h2 class="section-title">Complete Resume</h2>
-                <p class="section-subtitle">Full professional documentation and career history</p>
-            </div>
-            <div class="resume-viewer" id="resumeContent"></div>
-        </section>
-
         <!-- Experience -->
         <section id="experience">
             <div class="section-header">
                 <h2 class="section-title">Professional Experience</h2>
                 <p class="section-subtitle">Delivering excellence in defense systems engineering</p>
             </div>
-            <div id="experienceContainer"></div>
+            <div class="scrollable-section">
+                <div id="experienceContainer"></div>
+            </div>
         </section>
 
         <!-- Projects -->
@@ -1539,7 +1557,9 @@
                 <h2 class="section-title">Featured Projects</h2>
                 <p class="section-subtitle">Click to explore detailed galleries and documentation</p>
             </div>
-            <div class="projects-grid" id="projectsContainer"></div>
+            <div class="scrollable-section">
+                <div class="projects-grid" id="projectsContainer"></div>
+            </div>
         </section>
 
         <!-- Skills -->
@@ -1548,7 +1568,9 @@
                 <h2 class="section-title">Technical Expertise</h2>
                 <p class="section-subtitle">Click any skill for comprehensive details and applications</p>
             </div>
-            <div class="skills-grid" id="skillsContainer"></div>
+            <div class="scrollable-section">
+                <div class="skills-grid" id="skillsContainer"></div>
+            </div>
         </section>
 
         <!-- Education -->
@@ -1659,7 +1681,6 @@
 
         function init() {
             initHeroSlideshow();
-            renderResume();
             renderExperience();
             renderProjects();
             renderSkills();
@@ -1693,16 +1714,6 @@
                 current = (current + 1) % slides.length;
                 slides[current].classList.add('active');
             }, CONFIG.slideshowSpeed);
-        }
-
-        function renderResume() {
-            document.getElementById('resumeContent').innerHTML = `
-                <div class="resume-section"><h3>OBJECTIVE</h3><p style="color: var(--text-secondary); line-height: 1.9;">Dynamic Systems Engineer with extensive experience at Lockheed Martin, excelling in Model-Based Systems Engineering and advanced diagnostics.</p></div>
-                <div class="resume-section"><h3>EDUCATION</h3><p><strong style="color: var(--primary);">Virginia State University</strong> - Petersburg, VA</p><p>Bachelor of Applied Science in Mechanical Engineering Technology</p><p>Graduated: May 2022</p></div>
-                <div class="resume-section"><h3>PROFESSIONAL EXPERIENCE</h3>
-                ${experiences.map(exp => `<div style="margin-bottom: 2rem;"><p style="color: var(--primary); font-size: 1.3rem; font-weight: bold;">${exp.company}</p><p style="font-style: italic;">${exp.role}</p><p style="color: var(--accent);">${exp.dates} | ${exp.location}</p>${exp.clearance ? '<p style="color: var(--accent);">🔒 Secret Security Clearance</p>' : ''}<ul style="margin-left: 2rem; margin-top: 0.5rem;">${exp.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul></div>`).join('')}
-                </div>
-            `;
         }
 
         function renderExperience() {
