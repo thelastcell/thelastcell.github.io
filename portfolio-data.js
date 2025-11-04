@@ -8,7 +8,7 @@ const DEFAULT_DATA = {
     summary: "Elite Defense Systems Engineer with proven track record on F-35 Joint Strike Fighter program. Expert in Model-Based Systems Engineering (MBSE), weapon systems integration, and Python automation. Active Secret Security Clearance with immediate availability for classified defense programs. Demonstrated success in reducing verification time by 40% through automation and achieving 100% requirements traceability on critical weapon integration projects.",
     heroBackgrounds: [],
     contact: {
-        email: "masonray0@gmail.com",
+        email: "zerodayrm@gmail.com",
         phone: "(804) 653-2912",
         linkedin: "https://linkedin.com/in/rayshaun-mason"
     },
